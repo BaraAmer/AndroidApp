@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.android.foodorderapp.adapters.EventHandleronIteamReView;
 import com.android.foodorderapp.adapters.RestaurantListAdapter;
 import com.android.foodorderapp.model.RestaurantModel;
 import com.google.gson.Gson;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements RestaurantListAda
     private void initRecyclerView(List<RestaurantModel> restaurantModelList ) {
         RecyclerView recyclerView =  findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RestaurantListAdapter adapter = new RestaurantListAdapter(restaurantModelList, this);
+        RestaurantListAdapter adapter = new RestaurantListAdapter(restaurantModelList,this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -72,4 +74,6 @@ public class MainActivity extends AppCompatActivity implements RestaurantListAda
         startActivity(intent);
 
     }
+
+
 }

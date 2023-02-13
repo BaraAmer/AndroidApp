@@ -20,6 +20,9 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     private List<RestaurantModel> restaurantModelList;
     private RestaurantListClickListener clickListener;
 
+
+
+
     public RestaurantListAdapter(List<RestaurantModel> restaurantModelList, RestaurantListClickListener clickListener) {
         this.restaurantModelList = restaurantModelList;
         this.clickListener = clickListener;
@@ -71,7 +74,6 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             restaurantAddress = view.findViewById(R.id.restaurantAddress);
             restaurantHours = view.findViewById(R.id.restaurantHours);
             thumbImage = view.findViewById(R.id.thumbImage);
-
         }
     }
 

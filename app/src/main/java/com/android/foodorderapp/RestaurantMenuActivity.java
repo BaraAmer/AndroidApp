@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.foodorderapp.adapters.EventHandleronIteamReView;
 import com.android.foodorderapp.adapters.MenuListAdapter;
 import com.android.foodorderapp.model.Menu;
 import com.android.foodorderapp.model.RestaurantModel;
@@ -22,17 +24,33 @@ import com.android.foodorderapp.model.RestaurantModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantMenuActivity extends AppCompatActivity implements MenuListAdapter.MenuListClickListener {
+public class RestaurantMenuActivity extends AppCompatActivity implements MenuListAdapter.MenuListClickListener , EventHandleronIteamReView {
     private List<Menu> menuList = null;
     private MenuListAdapter menuListAdapter;
     private List<Menu> itemsInCartList;
     private int totalItemInCart = 0;
     private TextView buttonCheckout;
+    private SearchView sv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_menu);
+
+        sv = findViewById(R.id.Seachfood);
+        sv.clearFocus();
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return false;
+            }
+        });
 
         RestaurantModel restaurantModel = getIntent().getParcelableExtra("RestaurantModel");
         ActionBar actionBar = getSupportActionBar();
@@ -45,7 +63,7 @@ public class RestaurantMenuActivity extends AppCompatActivity implements MenuLis
         initRecyclerView();
 
 
-         buttonCheckout = findViewById(R.id.buttonCheckout);
+        buttonCheckout = findViewById(R.id.buttonCheckout);
         buttonCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,10 +79,25 @@ public class RestaurantMenuActivity extends AppCompatActivity implements MenuLis
         });
     }
 
+    private void filter(String newText) {
+        List<Menu> filterlist = new ArrayList<>();
+        for (int i = 0; i < menuList.size(); i++) {
+            if (menuList.get(i).getName().contains(newText))
+                filterlist.add(menuList.get(i));
+        }
+
+        if (filterlist.isEmpty()){
+            Toast.makeText(this, "لا يوجد من هذا الصنف", Toast.LENGTH_LONG).show();
+        } else {
+            menuListAdapter.DataFiltered(filterlist);
+        }
+
+    }
+
     private void initRecyclerView() {
         RecyclerView recyclerView =  findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        menuListAdapter = new MenuListAdapter(menuList, this);
+        menuListAdapter = new MenuListAdapter(menuList, this,this);
         recyclerView.setAdapter(menuListAdapter);
     }
 
@@ -130,5 +163,27 @@ public class RestaurantMenuActivity extends AppCompatActivity implements MenuLis
             //
             finish();
         }
+    }
+
+    @Override
+    public void onnIteamClick(int position) {
+        String nam_iteam = menuList.get(position).getName();
+        String content_iteam = "بقدونس ، خبز ، طماطم ، بصل ، لحم طازج ، بطاطا";
+        String pricse_iteam = String.valueOf(menuList.get(position).getPrice());
+        String image_iteam = menuList.get(position).getUrl();
+        //Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        Intent in = new Intent(this,ShowIteam.class);
+        in.putExtra("Mname",nam_iteam);
+        in.putExtra("Mcont",content_iteam);
+        in.putExtra("Mpric",pricse_iteam);
+        in.putExtra("Mimage",image_iteam);
+        startActivity(in);
+    }
+
+    @Override
+    public void onImageOfIteamClick(int position) {
+
+
+
     }
 }

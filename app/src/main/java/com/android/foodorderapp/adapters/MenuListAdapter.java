@@ -22,9 +22,18 @@ public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.MyView
     private List<Menu> menuList;
     private MenuListClickListener clickListener;
 
-    public MenuListAdapter(List<Menu> menuList, MenuListClickListener clickListener) {
+    public static EventHandleronIteamReView ev;
+
+    public MenuListAdapter(List<Menu> menuList, MenuListClickListener clickListener,EventHandleronIteamReView ev) {
         this.menuList = menuList;
         this.clickListener = clickListener;
+        this.ev = ev;
+    }
+
+
+    public void DataFiltered(List<Menu> fdata ){
+        this.menuList = fdata;
+        notifyDataSetChanged();
     }
 
     public void updateData(List<Menu> menuList) {
@@ -119,6 +128,14 @@ public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.MyView
             tvCount = view.findViewById(R.id.tvCount);
 
             addMoreLayout  = view.findViewById(R.id.addMoreLayout);
+
+            String s = menuName.getText().toString();
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ev.onnIteamClick(getAdapterPosition());
+                }
+            });
         }
     }
 
